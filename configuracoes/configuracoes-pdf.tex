@@ -1,0 +1,54 @@
+% CONFIGURAÇÕES DE APARÊNCIA DO PDF FINAL--------------------------------------
+\makeatletter
+\hypersetup{%
+    portuguese,
+    colorlinks=true,   % true: "links" coloridos; false: "links" em caixas de texto
+    linkcolor=blue,    % Define cor dos "links" internos
+    citecolor=blue,    % Define cor dos "links" para as referências bibliográficas
+    filecolor=blue,    % Define cor dos "links" para arquivos
+    urlcolor=blue,     % Define a cor dos "hiperlinks"
+    breaklinks=true,
+    pdftitle={\@title},
+    pdfauthor={\@author},
+    pdfkeywords={abnt, latex, abntex, abntex2}
+}
+\makeatother
+
+% ALTERA O ASPECTO DA COR AZUL--------------------------------------------------
+\definecolor{blue}{RGB}{41,5,195}
+
+% REDEFINIÇÃO DE LABELS---------------------------------------------------------
+\renewcommand{\algorithmautorefname}{Algoritmo}
+\def\equationautorefname~#1\null{Equa\c c\~ao~(#1)\null}
+
+% CRIA ÍNDICE REMISSIVO---------------------------------------------------------
+\makeindex
+
+% HIFENIZAÇÃO DE PALAVRAS QUE NÃO ESTÃO NO DICIONÁRIO---------------------------
+\hyphenation{%
+    qua-dros-cha-ve
+    Kat-sa-gge-los
+}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\renewcommand{\lstlistingname}{Listagem}

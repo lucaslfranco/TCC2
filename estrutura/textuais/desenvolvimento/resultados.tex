@@ -1,0 +1,106 @@
+\chapter{ANÁLISE DOS RESULTADOS}
+
+\section{MODELOS}
+
+\subsection{Acurácia}
+
+Foram criados dois modelos com cada algoritmo de \textit{machine learning} testado, o primeiro considerando somente uma avaliação e o segundo com notas de duas avaliações.
+Os algoritmos utilizados foram o \textit{Gradient Boosting}, \textit{Random Forest} e de Regressão Linear, já descritos anteriormente, e ao realizar o treinamento dos modelos criados com o conjunto de dados disponível foram obtidos seus \textit{scores}, ou acurácias, com o auxilio da biblioteca \textit{Scikit-learn}.
+
+O cálculo do \textit{score} dos modelos foi realizado utilizando o coeficiente de determinação \textit{R\textsuperscript{2}}.
+O coeficiente de determinação \textit{R\textsuperscript{2}} é a proporção de variância dos dados que pode ser explicada pelo modelo de regressão. Ela é utilizada para medir o sucesso da predição de uma variável com base em outras variáveis independentes e quanto mais próximo de 1 maior a acurácia do modelo \cite{NAGEKERKE1991}.
+
+A função padrão de \textit{score} do \textit{Scikit-learn} retorna valores entre 0 e 1 para modelos onde a capacidade preditiva é melhor do que a média aritmética dos valores da amostra, ou seja, caso o modelo possua um \textit{score} inferior à 0 o cálculo simples da média dos valores da amostra seria mais preciso que o modelo treinado.
+
+Os \textit{scores} obtidos para os modelos construídos são apresentados na tabela \ref{tab:score-1}, no qual o conjunto 1 representa o conjunto de dados que considera somente uma avaliação e o conjunto 2 leva em conta as duas avaliações.
+
+\input{dados/tabelas/score-1.tex}
+
+Percebe-se que os modelos construídos com o algoritmo de regressão linear possuem acurácia muito elevada quando comparado aos outros algoritmos, principalmente para o conjunto 1. 
+As tabelas \ref{tab:teste-1} e \ref{tab:teste-2} apresentam os resultados retornados para o conjunto de 20\% de testes para os modelos treinados. 
+
+\input{dados/tabelas/teste-1.tex}
+
+\input{dados/tabelas/teste-2.tex}
+
+Dentre os algoritmos, o \textit{Gradient Boosting} e \textit{Random Forest} são considerados mais adequados para um volume pequeno de dados de treinamento e mais robustos quanto a \textit{overfitting} quando comparados aos algoritmos de regressão linear.
+Desta forma, a fim de verificar a acurácia dos modelos para diferentes situações foi-se executada a validação cruzada dos modelos, que divide o conjunto de dados em subconjuntos, treina e testa o modelo, retornando a acurácia média e desvio padrão dos diferentes subconjuntos.
+
+A tabela \ref{tab:validacao-cruzada} apresenta a média das acurácias dos modelos e o desvio padrão entre as acurácias obtidas com o \textit{Scikit-learn}, considerando uma validação cruzada de três subconjuntos.
+
+\input{dados/tabelas/validacao-cruzada.tex}
+
+Com a validação cruzada foi possível observar um melhor desempenho do algoritmo \textit{Gradient Boosting} para ambos os casos, retornando também um menor desvio padrão para o conjunto 1.
+Dentre os três algoritmos, o \textit{Random Forest} obteve acurácias intermediárias e a regressão linear foi a que retornou o pior desempenho.
+
+Devido ao algoritmo \textit{Gradient Boosting} apresentar os melhores resultados na maioria dos casos, este foi empregado como a técnica utilizada para retornar as predições em toda a plataforma desenvolvida neste trabalho.
+
+\subsection{Importância}
+
+As tabelas \ref{tab:importanciaGradient} e \ref{tab:importanciaRandom} mostram a importância das variáveis para os algoritmos \textit{Gradient Boosting} e \textit{Random Forest} para o conjunto de duas avaliações.
+Nelas é possível observar que para o conjunto de dados utilizados a nota da segunda avaliação tem uma influência muito grande no resultado final das predições, possuindo importâncias de 79,9\% e 55,7\% para os dois modelos, respectivamente.
+
+Os modelos divergem quanto a segunda variável com maior influência sobre a predição, mostrando que tanto a nota do primeiro trabalho quanto a nota da primeira avaliação podem ser importantes nesse contexto.
+
+A frequência do aluno ficou em 4º lugar com 3,2\% na lista do primeiro algoritmo e em 3º lugar com 14,5\% para o segundo, apresentando certa diferença no nível de importância mas mostrando que em ambos os casos esta variável ainda se faz presente nas predições.
+
+Em ambos os modelos as variáveis com menor importância foram as notas do segundo e terceiro trabalhos, com influências de 1,7\% ou menos nas estimativas.
+
+Já a tabela \ref{tab:importanciaUmaProva} lista as variáveis e suas importâncias considerando alunos que só realizaram uma avaliação. Neste caso o nível de incerteza dependerá do padrão da disciplina. Caso o previsto seja a aplicação de três avaliações, o nível de incerteza se torna maior quanto à nota final dos alunos, pois há mais variáveis desconhecidas do que conhecidas para se realizar a predição, por exemplo, conhece-se a nota da primeira avaliação mas não da segunda e terceira avaliações.
+Neste caso, pode-se verificar que a nota da primeira avaliação está diretamente relacionada a nota final prevista para o aluno, com 89,6\% e 92,7\% de importância, respectivamente, para as predições realizadas pelo \textit{Gradient Boosting} e pelo \textit{Random Forest}.
+
+Ao comparar as tabelas \ref{tab:importanciaGradient} e \ref{tab:importanciaRandom} com a tabela \ref{tab:importanciaUmaProva} é possível observar que para o conjunto de dados que possui notas de duas avaliações a importância se diluiu mais entre as \textit{features} disponíveis, enquanto que para dados com somente uma avaliação a importância se concentrou na nota da avaliação realizada. 
+Complementar a isto, os dados dos exercícios da plataforma URI tiveram uma participação muita baixa nas estimativas dos modelos, com cerca de 1,0\% de influência para ambos os algoritmos.
+
+Em seguida tem-se a tabela \ref{tab:importanciaComDatas}, que mostra o resultado de um teste realizado considerando como \textit{features} cada um dos dias de aula.
+Foi possível observar que individualmente as aulas não tiveram participação considerável na predição das notas finais dos alunos, com um máximo de 0,2\% por aula individual e total de 0,9\% ao somar as importâncias de todas as aulas do modelo construído com o \textit{Gradient Boosting}, que foi o modelo que retornou maior influência destas variáveis.
+
+Por fim a tabela \ref{tab:coef-linear} mostra os coeficientes determinados para a equação linear gerada pelo algoritmo de regressão linear. 
+E nesta é possível observar uma maior distribuição da influência entre as variáveis, apresentando, como os outros algoritmos, um coeficiente mais elevado para a a nota da segunda avaliação, seguida da nota da primeira avaliação, com 0,473 e 0,407, respectivamente, somando um coeficiente conjunto de 0,88 para as avaliações. 
+Já para os trabalhos os coeficientes somados representam um valor de 0,116. 
+O restante fica por conta da frequência e da porcentagem de exercícios do URI resolvidos. 
+Este último obteve um coeficiente negativo, porém muito pequeno, o que se torna praticamente irrelevante para a estimativa da nota final.
+
+\section{IMPLEMENTAÇÃO}
+
+Os resultados obtidos acerca da plataforma desenvolvida foram mais subjetivos, mas é possível visualizar os potenciais que a ferramenta têm para o auxílio dos usuários na análise dos dados acadêmicos.
+
+\subsection{Dashboard}
+
+Com o dashboard implementado é possível extrair alguns \textit{insights} sobre os dados. 
+O gráfico temporal apresentado na figura \ref{fig:dashboard-1} possibilita verificar a proporção de faltas da turma como um todo, e caso a linha de faltas da turma ultrapasse a linha que representa o limite permitido de faltas, o profissional pode tomar ações para compreender em detalhes quais os motivos que levam a esse acontecimento.
+Já com os indicadores da parte superior da mesma página, pode-se ter uma visão geral das turmas cadastradas ou de uma turma específica selecionado-a na caixa de seleção flutuante presente à direita.
+
+A partir do gráfico de dispersão do dashboard, figura \ref{fig:dashboard-2}, pode-se verificar visualmente o nível de correlação presente entre a frequência e as notas dos alunos, e caso a influência dos trabalhos na nota final seja explícita o profissional pode tomar ações ou apresentar este gráfico aos alunos, argumentando e influenciando-os a seguir o perfil que tende a receber melhores notas.
+
+No mesmo gráfico pode-se verificar que há alunos com frequências próximas ou iguais a 100\% mas com notas abaixo da média para aprovação, desta forma é possível acessar estes alunos a fim de averiguar quais os motivos que os levam a não obterem desempenho tão bons na disciplina.
+Com isso pode-se descobrir lacunas no método pedagógico utilizado pelo docente e oportunidades de utilização de recursos para a melhoria do aprendizado, como os alunos monitores com um maior foco nestes alunos.
+
+Ainda no dashboard, o gráfico de barras permite uma análise rápida das notas do alunos nas disciplinas e a comparação entre elas, assim pode-se identificar a proporção de alunos com um bom, médio e baixo desempenho, apurando também as disciplinas com menor aproveitamento por conta dos alunos.
+
+\subsection{Predição, Feedback e Mecanismos de Detecção}
+
+A predição das notas dos alunos em conjunto com a detecção de situações incomuns complementam o sistema proposto e desenvolvido neste trabalho, que tem como objetivo fornecer ferramentas para que os profissionais possam analisar dados acadêmicos e tomar algumas ações simples sem a necessidade de muitos esforços manuais.
+
+A página de detalhes do estudante proporciona ao docente uma visão da situação atual do aluno, permitindo nela comparar o aluno à média, tanto em faltas quanto em notas. 
+Esta é uma forma de investigar um aluno a fim de identificar padrões no seu comportamento, como a diminuição das notas coincidentemente na época do período letivo que o aluno mais obteve faltas.
+
+Ainda na mesma página o profissional poderá submeter uma notificação ao aluno, solicitando um \textit{feedback}. 
+Este recurso foi idealizado para o uso em situações que demandam uma advertência, mas ele não é restrito a isso. 
+Caso o docente observe alguma variação no perfil dos alunos, este pode pedir um \textit{feedback} também em uma situação ainda considerada adequada para o aluno.
+Um exemplo de padrão que o professor pode identificar é a ausência de determinados alunos no mesmo dia da semana. 
+Deduz-se então que algum evento em especial pode estar ocorrendo nestes dias e o docente pode enviar um e-mail aos alunos a fim de comprovar seu \textit{insight}.
+
+Um dos objetivos almejados com a possibilidade de os alunos enviarem \textit{feedbacks} é verificar se a comunicação com os alunos pode ser uma forma de conscientização e consequentemente melhores resultados no desempenho dos alunos.
+
+Observou-se com a base de dados utilizada neste trabalho que existem diferentes perfis de estudantes e este sistema é destinado a atingir a parcela de alunos que possui dedicação aos estudos mas por algum motivo sob o domínio do professor não consegue obter um bom desempenho e devido a isto possui perfil tendencioso a desistência ou reprovação nas disciplinas.
+
+Como descrito anteriormente, o algoritmo selecionado para a predição das notas dos alunos foi o \textit{Gradient Boosting}.
+Com ela utilizando uma base histórica tornou-se possível estimar o desempenho dos alunos, a fim de tomar ações e inibir a retenção acadêmica antes do seu acontecimento.
+
+Em contrapartida observou-se que o algoritmo de regressão linear determinou o coeficientes da sua equação linear com valores muito semelhantes aos pesos para avaliações e trabalhos definidos no carregamento dos dados na ferramenta.
+Os pesos utilizados no momento do carregamento foram 0,9 para as avaliações e 0,1 para os trabalhos e os coeficientes retornados pelo algoritmo para as avaliações e para os trabalhos foram 0,880 e 0,116, respectivamente, o que comprovou uma boa capacidade de modelar o método de avaliação por conta do algoritmo.
+Para dados que não seguiam um comportamento linear o \textit{Gradient Boosting} se mostrou melhor.
+
+O sistema construído segmenta os alunos em três perfis, o primeiro com mais chances de aprovação na disciplina, o segundo com estimativas medianas e o terceiro com maiores riscos de reprovação. 
+Com isso o profissional pode selecionar um perfil específico e atuar sobre os alunos contidos nele com o intuito de melhorar suas situações e colaborar com a transição destes para perfis mais positivos.
